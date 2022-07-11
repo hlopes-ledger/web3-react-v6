@@ -3,7 +3,7 @@
  */
 const config = {
   env: {
-    RPC_URL_1: 'https://mainnet.infura.io/v3/84842078b09946638c03157f83405213',
+    RPC_URL_1: 'https://cloudflare-eth.com',
     RPC_URL_4: 'https://rinkeby.infura.io/v3/84842078b09946638c03157f83405213',
     FORTMATIC_API_KEY: 'pk_test_A6260FCBAA2EBDFB',
     MAGIC_API_KEY: 'pk_test_398B82F5F0E88874',

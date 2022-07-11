@@ -6,6 +6,8 @@ import { LedgerSubprovider } from '@0x/subproviders/lib/src/subproviders/ledger'
 import CacheSubprovider from 'web3-provider-engine/subproviders/cache.js'
 import { RPCSubprovider } from '@0x/subproviders/lib/src/subproviders/rpc_subprovider' // https://github.com/0xProject/0x-monorepo/issues/1400
 
+import { injectConnectKit } from './lib/injectConnectKit'
+
 interface LedgerConnectorArguments {
   chainId: number
   url: string
@@ -44,7 +46,36 @@ export class LedgerConnector extends AbstractConnector {
   }
 
   public async activate(): Promise<ConnectorUpdate> {
+    console.log('provider is ', this.provider)
+
+    // if (!this.provider) {
+    // //
+    // const { checkConnectSupport, showModal } = await injectConnectKit()
+    // const connectSupport = checkConnectSupport();
+    // alert(JSON.stringify(connectSupport))
+
+    // // show a UI modal deppending on the Connect support
+    // const showModalResponse = showModal(connectSupport)
+    // alert(JSON.stringify(showModalResponse))
+
+    // if (connectSupport.isConnectSupported && !showModalResponse?.error) {
+    //   this.provider = window.ethereum
+
+    //   // Connect is supported and no error was triggered, we can access the
+    //   // provider injected by Connect
+    //   return {
+    //     provider: this.provider,
+    //     chainId: this.chainId
+    //   }
+    // } else if (!!showModalResponse?.error) {
+    //   // if an error was triggered show it
+    //   throw showModalResponse.error
+    // }
+
+    // console.log('using USB fallback')
+
     if (!this.provider) {
+      // use USB if it is supported
       const engine = new Web3ProviderEngine({ pollingInterval: this.pollingInterval })
       engine.addProvider(
         new LedgerSubprovider({
@@ -57,6 +88,8 @@ export class LedgerConnector extends AbstractConnector {
       engine.addProvider(new CacheSubprovider())
       engine.addProvider(new RPCSubprovider(this.url, this.requestTimeoutMs))
       this.provider = engine
+
+      console.log('new provider is ', this.provider)
     }
 
     this.provider.start()
